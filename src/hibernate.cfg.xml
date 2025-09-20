@@ -1,0 +1,23 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Kết nối PostgreSQL -->
+         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres</property>
+        <property name="hibernate.connection.username">postgres.eygdnvcwgtpmwgwfcbue</property>
+        <property name="hibernate.connection.password">123456</property>
+
+        <!-- Cấu hình Hibernate -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Ánh xạ Entity -->
+        <mapping class="app.swing.model.SanPham" />
+
+    </session-factory>
+</hibernate-configuration>

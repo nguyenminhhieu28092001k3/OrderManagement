@@ -1,0 +1,29 @@
+
+# Build directories
+/build/
+out/
+
+# IDE specific files
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Compiled class files
+*.class
+
+# Hibernate specific files
+*.hbm2ddl.auto
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
