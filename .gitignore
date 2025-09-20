@@ -1,29 +1,20 @@
-
-# Build directories
-/build/
+# NetBeans
+build/
 out/
 
-# IDE specific files
-*.iml
+# IDE
 .idea/
-*.ipr
-*.iws
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
 
-# Logs
-*.log
-
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
-
-# Compiled class files
-*.class
-
-# Hibernate specific files
-*.hbm2ddl.auto
-
-# Temporary files
-*.tmp
-*.bak
 *.swp
 *.swo
+*~
+
+

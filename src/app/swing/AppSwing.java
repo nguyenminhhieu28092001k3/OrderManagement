@@ -7,6 +7,7 @@ package app.swing;
 import app.swing.view.LoadingView;
 import app.swing.view.LoginView;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  *
