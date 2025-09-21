@@ -11,57 +11,57 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author hieu
+ * @author HieuNM
  */
 public class UserService {
-    
+
     public enum LoginResult {
         SUCCESS,
         INVALID_CREDENTIALS,
         ACCOUNT_DISABLED,
         DATABASE_ERROR
     }
-    
+
     public static class AuthResult {
         private LoginResult result;
         private User user;
-        
+
         public AuthResult(LoginResult result, User user) {
             this.result = result;
             this.user = user;
         }
-        
+
         public LoginResult getResult() {
             return result;
         }
-        
+
         public User getUser() {
             return user;
         }
     }
-    
+
     public AuthResult authenticate(String username, String password) {
         try (Connection conn = DbConnection.getConnection()) {
             String sql = "SELECT id, username, password, role, status, full_name, email FROM users WHERE username = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
-            
+
             ResultSet rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
                 boolean status = rs.getBoolean("status");
-                
+
                 // Kiểm tra mật khẩu (có thể mã hóa MD5 hoặc plain text)
                 if (!verifyPassword(password, storedPassword)) {
                     return new AuthResult(LoginResult.INVALID_CREDENTIALS, null);
                 }
-                
+
                 // Kiểm tra trạng thái tài khoản
                 if (!status) {
                     return new AuthResult(LoginResult.ACCOUNT_DISABLED, null);
                 }
-                
+
                 // Tạo đối tượng User
                 User user = new User();
                 user.setId(rs.getInt("id"));
@@ -70,18 +70,18 @@ public class UserService {
                 user.setStatus(rs.getBoolean("status"));
                 user.setFullName(rs.getString("full_name"));
                 user.setEmail(rs.getString("email"));
-                
+
                 return new AuthResult(LoginResult.SUCCESS, user);
             } else {
                 return new AuthResult(LoginResult.INVALID_CREDENTIALS, null);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             return new AuthResult(LoginResult.DATABASE_ERROR, null);
         }
     }
-    
+
     private boolean verifyPassword(String inputPassword, String storedPassword) {
         // Nếu mật khẩu được mã hóa MD5
         if (storedPassword.length() == 32) {
@@ -90,7 +90,7 @@ public class UserService {
         // Nếu mật khẩu plain text
         return storedPassword.equals(inputPassword);
     }
-    
+
     private String hashMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -108,7 +108,7 @@ public class UserService {
             throw new RuntimeException(e);
         }
     }
-    
+
     public String getLoginResultMessage(LoginResult result) {
         switch (result) {
             case SUCCESS:
@@ -123,4 +123,4 @@ public class UserService {
                 return "Lỗi không xác định.";
         }
     }
-} 
+}

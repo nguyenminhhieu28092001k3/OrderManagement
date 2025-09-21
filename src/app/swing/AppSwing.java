@@ -11,7 +11,7 @@ import javax.swing.UIManager;
 
 /**
  *
- * @author khaim
+ * @author HieuNM
  */
 public class AppSwing {
 
@@ -25,13 +25,13 @@ public class AppSwing {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 // Show loading screen first
                 new LoadingView(6000); // 3 seconds loading
-                
+
                 // Then show login screen
                 new LoginView().setVisible(true);
             }

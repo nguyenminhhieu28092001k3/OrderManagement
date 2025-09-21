@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author khaim
+ * @author HieuNM
  */
 public class LoadingView extends JWindow {
     public LoadingView(int duration) {

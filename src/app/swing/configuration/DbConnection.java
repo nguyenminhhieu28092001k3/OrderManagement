@@ -7,7 +7,7 @@ import app.swing.contants.DbConst;
 import java.sql.*;
 /**
  *
- * @author khaim
+ * @author HieuNM
  */
 public class DbConnection {
     public static Connection getConnection() throws SQLException{
