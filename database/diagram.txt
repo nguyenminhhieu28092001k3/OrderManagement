@@ -1,0 +1,108 @@
+erDiagram
+    CUSTOMERS {
+      BIGSERIAL id PK
+      TEXT code
+      TEXT name
+      TEXT email
+      TEXT phone
+    }
+
+    SUPPLIERS {
+      BIGSERIAL id PK
+      TEXT name
+      TEXT contact_name
+      TEXT email
+      TEXT phone
+    }
+
+    CATEGORIES {
+      BIGSERIAL id PK
+      TEXT name
+      BIGINT parent_id FK
+    }
+
+    PRODUCTS {
+      BIGSERIAL id PK
+      TEXT sku
+      TEXT name
+      BIGINT category_id FK
+      BIGINT supplier_id FK
+      NUMERIC price
+      INTEGER stock_quantity
+    }
+
+    ORDERS {
+      BIGSERIAL id PK
+      TEXT order_number
+      BIGINT customer_id FK
+      VARCHAR status "CHECK in (draft,pending,paid,shipped,completed,cancelled,refunded)"
+      TIMESTAMPTZ placed_at
+      NUMERIC subtotal
+      NUMERIC total
+    }
+
+    ORDER_ITEMS {
+      BIGSERIAL id PK
+      BIGINT order_id FK
+      BIGINT product_id FK
+      INTEGER quantity
+      NUMERIC unit_price
+      NUMERIC line_total
+    }
+
+    PAYMENTS {
+      BIGSERIAL id PK
+      BIGINT order_id FK
+      NUMERIC amount
+      VARCHAR method "CHECK in (cash,card,bank_transfer,wallet,other)"
+      TIMESTAMPTZ paid_at
+    }
+
+    SHIPMENTS {
+      BIGSERIAL id PK
+      BIGINT order_id FK
+      TEXT provider
+      TEXT tracking_number
+      VARCHAR status "CHECK in (pending,shipped,in_transit,delivered,returned,cancelled)"
+    }
+
+    INVENTORY_MOVEMENTS {
+      BIGSERIAL id PK
+      BIGINT product_id FK
+      INTEGER change_qty
+      VARCHAR kind "CHECK in (purchase,sale,adjustment,return)"
+      TEXT reference_type
+      BIGINT reference_id
+      INTEGER created_by FK
+    }
+
+    USERS {
+      SERIAL id PK
+      VARCHAR username
+      VARCHAR full_name
+      VARCHAR email
+      VARCHAR role "CHECK in (admin,customer_admin,staff)"
+      BOOLEAN status
+    }
+
+    AUDIT_LOGS {
+      BIGSERIAL id PK
+      TEXT entity_type
+      BIGINT entity_id
+      TEXT action
+      INTEGER performed_by FK
+      TIMESTAMPTZ performed_at
+    }
+
+    %% Relationships
+    CUSTOMERS ||--o{ ORDERS           : "đặt"
+    ORDERS    ||--|{ ORDER_ITEMS       : "bao gồm"
+    PRODUCTS  ||--o{ ORDER_ITEMS       : "được bán"
+    SUPPLIERS ||--o{ PRODUCTS          : "cung cấp"
+    CATEGORIES||--o{ PRODUCTS          : "chứa"
+    ORDERS    ||--o{ PAYMENTS          : "thanh toán"
+    ORDERS    ||--o{ SHIPMENTS         : "vận chuyển"
+    PRODUCTS  ||--o{ INVENTORY_MOVEMENTS : "ghi nhận"
+    USERS     ||--o{ INVENTORY_MOVEMENTS : "tạo bởi"
+    USERS     ||--o{ AUDIT_LOGS         : "thực hiện"
+    CATEGORIES||--o{ CATEGORIES        : "parent"

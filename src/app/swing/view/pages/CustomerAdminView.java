@@ -180,7 +180,7 @@ public class CustomerAdminView extends JFrame {
         footerPanel.setBackground(new Color(34, 139, 34));
         footerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JLabel footerLabel = new JLabel("© 2024 - Hệ thống quản lý doanh nghiệp - Phiên bản 1.0");
+        JLabel footerLabel = new JLabel("Hệ thống quản lý doanh nghiệp - Phiên bản 1.0");
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         footerLabel.setForeground(Color.WHITE);
 

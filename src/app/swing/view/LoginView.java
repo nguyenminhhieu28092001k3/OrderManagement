@@ -123,7 +123,7 @@ public class LoginView extends JFrame {
         JPanel footerPanel = new JPanel(new FlowLayout());
         footerPanel.setBackground(new Color(240, 248, 255));
 
-        JLabel footerLabel = new JLabel("© 2024 - Hệ thống quản lý");
+        JLabel footerLabel = new JLabel("Hệ thống quản lý");
         footerLabel.setFont(new Font("Arial", Font.ITALIC, 10));
         footerLabel.setForeground(Color.GRAY);
         footerPanel.add(footerLabel);

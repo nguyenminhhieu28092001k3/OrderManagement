@@ -180,7 +180,7 @@ public class AdminView extends JFrame {
         footerPanel.setBackground(new Color(70, 130, 180));
         footerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JLabel footerLabel = new JLabel("© 2025 - Hệ thống quản lý - Phiên bản 1.0");
+        JLabel footerLabel = new JLabel("Hệ thống quản lý - Phiên bản 1.0");
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         footerLabel.setForeground(Color.WHITE);
 
