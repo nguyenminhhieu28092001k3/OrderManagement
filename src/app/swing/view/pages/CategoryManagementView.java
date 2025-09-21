@@ -38,12 +38,89 @@ public class CategoryManagementView extends JFrame {
     private final String TABLE_VIEW = "table_view";
     private JToggleButton treeViewButton;
     private JToggleButton tableViewButton;
+    private boolean isEmbedded = false;
 
     public CategoryManagementView() {
         this.categoryService = new CategoryService();
         this.categoryNodeMap = new HashMap<>();
+        this.isEmbedded = false;
         initComponents();
         loadCategoryData();
+    }
+
+    // Constructor for embedded mode
+    public CategoryManagementView(boolean embedded) {
+        this.categoryService = new CategoryService();
+        this.categoryNodeMap = new HashMap<>();
+        this.isEmbedded = embedded;
+        if (!embedded) {
+            initComponents();
+            loadCategoryData();
+        }
+    }
+
+    // Method to get the main panel for embedding
+    public JPanel getMainPanel() {
+        if (isEmbedded) {
+            return createEmbeddedPanel();
+        }
+        return null;
+    }
+
+    private JPanel createEmbeddedPanel() {
+        // Create main panel without frame-specific components
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
+
+        // Create header (without back button)
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(65, 105, 225));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+
+        JLabel titleLabel = new JLabel("Quản Lý Danh Mục Sản Phẩm");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+
+        JLabel descLabel = new JLabel("Thêm, chỉnh sửa và quản lý cấu trúc danh mục sản phẩm");
+        descLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        descLabel.setForeground(new Color(220, 220, 220));
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        titlePanel.add(descLabel);
+
+        headerPanel.add(titlePanel, BorderLayout.WEST);
+
+        // Create toolbar
+        JPanel toolbarPanel = createToolbarPanel();
+
+        // Create card panel for tree and table views
+        cardPanel = new JPanel();
+        cardLayout = new CardLayout();
+        cardPanel.setLayout(cardLayout);
+
+        // Create tree view panel
+        JPanel treePanel = createTreePanel();
+        cardPanel.add(treePanel, TREE_VIEW);
+
+        // Create table view panel
+        JPanel tablePanel = createTablePanel();
+        cardPanel.add(tablePanel, TABLE_VIEW);
+
+        // Default to tree view
+        cardLayout.show(cardPanel, TREE_VIEW);
+
+        // Initialize data
+        loadCategoryData();
+
+        // Add components
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(toolbarPanel, BorderLayout.PAGE_START);
+        mainPanel.add(cardPanel, BorderLayout.CENTER);
+
+        return mainPanel;
     }
 
     private void initComponents() {

@@ -1,6 +1,15 @@
 package app.swing.view.pages;
 
 import app.swing.model.User;
+import app.swing.model.Supplier;
+import app.swing.model.Category;
+import app.swing.model.Product;
+import app.swing.model.Customer;
+import app.swing.service.UserService;
+import app.swing.service.SupplierService;
+import app.swing.service.CategoryService;
+import app.swing.service.ProductService;
+import app.swing.service.CustomerService;
 import app.swing.util.SessionManager;
 import app.swing.view.LoginView;
 import app.swing.view.pages.UserManagementView;
@@ -12,11 +21,19 @@ import app.swing.view.pages.ProductManagementView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.geom.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -27,9 +44,30 @@ public class AdminView extends JFrame {
     private User currentUser;
     private JPanel currentSelectedPanel = null;
     private String currentSelectedTitle = "Dashboards"; // Default selection
+    private JPanel contentArea; // Main content area
+    private CardLayout contentCardLayout;
+    private final String DASHBOARD_VIEW = "dashboard";
+    private final String USER_MANAGEMENT_VIEW = "user_management";
+    private final String SUPPLIER_MANAGEMENT_VIEW = "supplier_management";
+    private final String CATEGORY_MANAGEMENT_VIEW = "category_management";
+    private final String PRODUCT_MANAGEMENT_VIEW = "product_management";
+    private final String CUSTOMER_MANAGEMENT_VIEW = "customer_management";
+
+    // Service instances
+    private UserService userService;
+    private SupplierService supplierService;
+    private CategoryService categoryService;
+    private ProductService productService;
+    private CustomerService customerService;
 
     public AdminView(User user) {
         this.currentUser = user;
+        // Initialize services
+        this.userService = new UserService();
+        this.supplierService = new SupplierService();
+        this.categoryService = new CategoryService();
+        this.productService = new ProductService();
+        this.customerService = new CustomerService();
         initComponents();
     }
 
@@ -71,12 +109,36 @@ public class AdminView extends JFrame {
         // Sidebar navigation
         JPanel sidebarPanel = createSidebarPanel();
 
-        // Content panel
-        JPanel contentPanel = createContentPanel();
+        // Create content area with CardLayout for different views
+        contentArea = new JPanel();
+        contentCardLayout = new CardLayout();
+        contentArea.setLayout(contentCardLayout);
+
+        // Add different view panels to content area
+        contentArea.add(createDashboardPanel(), DASHBOARD_VIEW);
+
+        // Create embedded management panels
+        UserManagementView userMgmtView = new UserManagementView(true);
+        contentArea.add(userMgmtView.getMainPanel(), USER_MANAGEMENT_VIEW);
+
+        SupplierManagementView supplierMgmtView = new SupplierManagementView(true);
+        contentArea.add(supplierMgmtView.getMainPanel(), SUPPLIER_MANAGEMENT_VIEW);
+
+        CategoryManagementView categoryMgmtView = new CategoryManagementView(true);
+        contentArea.add(categoryMgmtView.getMainPanel(), CATEGORY_MANAGEMENT_VIEW);
+
+        ProductManagementView productMgmtView = new ProductManagementView(true);
+        contentArea.add(productMgmtView.getMainPanel(), PRODUCT_MANAGEMENT_VIEW);
+
+        CustomerManagementView customerMgmtView = new CustomerManagementView(true);
+        contentArea.add(customerMgmtView.getMainPanel(), CUSTOMER_MANAGEMENT_VIEW);
+
+        // Show dashboard by default
+        contentCardLayout.show(contentArea, DASHBOARD_VIEW);
 
         // Add sidebar and content to center panel
         centerPanel.add(sidebarPanel, BorderLayout.WEST);
-        centerPanel.add(contentPanel, BorderLayout.CENTER);
+        centerPanel.add(contentArea, BorderLayout.CENTER);
 
         // Footer panel
         JPanel footerPanel = createFooterPanel();
@@ -243,25 +305,25 @@ public class AdminView extends JFrame {
                 // Update selection
                 setSelectedNavItem(title, navItem, contentPanel, iconLabel, textLabel, indicator);
 
-                // Handle navigation
+                // Handle navigation - switch content views
                 switch (title) {
                     case "Dashboards":
-                        // Already on dashboard, no action needed
+                        contentCardLayout.show(contentArea, DASHBOARD_VIEW);
                         break;
                     case "Người dùng":
-                        new UserManagementView().setVisible(true);
+                        contentCardLayout.show(contentArea, USER_MANAGEMENT_VIEW);
                         break;
                     case "Nhà cung cấp":
-                        new SupplierManagementView().setVisible(true);
+                        contentCardLayout.show(contentArea, SUPPLIER_MANAGEMENT_VIEW);
                         break;
                     case "Danh mục":
-                        new CategoryManagementView().setVisible(true);
+                        contentCardLayout.show(contentArea, CATEGORY_MANAGEMENT_VIEW);
                         break;
                     case "Sản phẩm":
-                        new ProductManagementView().setVisible(true);
+                        contentCardLayout.show(contentArea, PRODUCT_MANAGEMENT_VIEW);
                         break;
                     case "Khách hàng":
-                        new CustomerManagementView().setVisible(true);
+                        contentCardLayout.show(contentArea, CUSTOMER_MANAGEMENT_VIEW);
                         break;
                     default:
                         JOptionPane.showMessageDialog(AdminView.this,
@@ -431,7 +493,7 @@ public class AdminView extends JFrame {
         return headerPanel;
     }
 
-    private JPanel createContentPanel() {
+    private JPanel createDashboardPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(245, 245, 245));
         contentPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -585,6 +647,7 @@ public class AdminView extends JFrame {
 
         return footerPanel;
     }
+
 
     private void logout() {
         int choice = JOptionPane.showConfirmDialog(

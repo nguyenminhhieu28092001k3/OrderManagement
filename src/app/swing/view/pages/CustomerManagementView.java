@@ -26,11 +26,74 @@ public class CustomerManagementView extends JFrame {
     private JTextField searchField;
     private CustomerService customerService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private boolean isEmbedded = false;
 
     public CustomerManagementView() {
         this.customerService = new CustomerService();
+        this.isEmbedded = false;
         initComponents();
         loadCustomerData();
+    }
+
+    // Constructor for embedded mode
+    public CustomerManagementView(boolean embedded) {
+        this.customerService = new CustomerService();
+        this.isEmbedded = embedded;
+        if (!embedded) {
+            initComponents();
+            loadCustomerData();
+        }
+    }
+
+    // Method to get the main panel for embedding
+    public JPanel getMainPanel() {
+        if (isEmbedded) {
+            return createEmbeddedPanel();
+        }
+        return null;
+    }
+
+    private JPanel createEmbeddedPanel() {
+        // Create main panel without frame-specific components
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
+
+        // Create header (without back button)
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(65, 105, 225));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+
+        JLabel titleLabel = new JLabel("Quản Lý Khách Hàng");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+
+        JLabel descLabel = new JLabel("Thêm, chỉnh sửa và quản lý thông tin khách hàng");
+        descLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        descLabel.setForeground(new Color(220, 220, 220));
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        titlePanel.add(descLabel);
+
+        headerPanel.add(titlePanel, BorderLayout.WEST);
+
+        // Create toolbar
+        JPanel toolbarPanel = createToolbarPanel();
+
+        // Create table panel
+        JPanel tablePanel = createTablePanel();
+
+        // Initialize data
+        loadCustomerData();
+
+        // Add components
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(toolbarPanel, BorderLayout.PAGE_START);
+        mainPanel.add(tablePanel, BorderLayout.CENTER);
+
+        return mainPanel;
     }
 
     private void initComponents() {
