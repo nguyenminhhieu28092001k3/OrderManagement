@@ -5,11 +5,13 @@ import app.swing.model.Supplier;
 import app.swing.model.Category;
 import app.swing.model.Product;
 import app.swing.model.Customer;
+import app.swing.model.InventoryMovement;
 import app.swing.service.UserService;
 import app.swing.service.SupplierService;
 import app.swing.service.CategoryService;
 import app.swing.service.ProductService;
 import app.swing.service.CustomerService;
+import app.swing.service.InventoryMovementService;
 import app.swing.util.SessionManager;
 import app.swing.view.LoginView;
 import app.swing.view.pages.UserManagementView;
@@ -17,6 +19,7 @@ import app.swing.view.pages.SupplierManagementView;
 import app.swing.view.pages.CategoryManagementView;
 import app.swing.view.pages.CustomerManagementView;
 import app.swing.view.pages.ProductManagementView;
+import app.swing.view.pages.InventoryMovementManagementView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,6 +55,7 @@ public class AdminView extends JFrame {
     private final String CATEGORY_MANAGEMENT_VIEW = "category_management";
     private final String PRODUCT_MANAGEMENT_VIEW = "product_management";
     private final String CUSTOMER_MANAGEMENT_VIEW = "customer_management";
+    private final String INVENTORY_MANAGEMENT_VIEW = "inventory_management";
 
     // Service instances
     private UserService userService;
@@ -59,6 +63,7 @@ public class AdminView extends JFrame {
     private CategoryService categoryService;
     private ProductService productService;
     private CustomerService customerService;
+    private InventoryMovementService inventoryMovementService;
 
     public AdminView(User user) {
         this.currentUser = user;
@@ -68,6 +73,7 @@ public class AdminView extends JFrame {
         this.categoryService = new CategoryService();
         this.productService = new ProductService();
         this.customerService = new CustomerService();
+        this.inventoryMovementService = new InventoryMovementService();
         initComponents();
     }
 
@@ -133,6 +139,9 @@ public class AdminView extends JFrame {
         CustomerManagementView customerMgmtView = new CustomerManagementView(true);
         contentArea.add(customerMgmtView.getMainPanel(), CUSTOMER_MANAGEMENT_VIEW);
 
+        InventoryMovementManagementView inventoryMgmtView = new InventoryMovementManagementView(true);
+        contentArea.add(inventoryMgmtView.getMainPanel(), INVENTORY_MANAGEMENT_VIEW);
+
         // Show dashboard by default
         contentCardLayout.show(contentArea, DASHBOARD_VIEW);
 
@@ -168,6 +177,7 @@ public class AdminView extends JFrame {
         sidebarPanel.add(createNavItem("Nhà cung cấp", "🏭", true));
         sidebarPanel.add(createNavItem("Danh mục", "📁", true));
         sidebarPanel.add(createNavItem("Sản phẩm", "📦", true));
+        sidebarPanel.add(createNavItem("Xuất nhập kho", "📋", true));
         sidebarPanel.add(createNavItem("Khách hàng", "👨‍💼", true));
         sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true));
 
@@ -322,6 +332,9 @@ public class AdminView extends JFrame {
                     case "Sản phẩm":
                         contentCardLayout.show(contentArea, PRODUCT_MANAGEMENT_VIEW);
                         break;
+                    case "Xuất nhập kho":
+                        contentCardLayout.show(contentArea, INVENTORY_MANAGEMENT_VIEW);
+                        break;
                     case "Khách hàng":
                         contentCardLayout.show(contentArea, CUSTOMER_MANAGEMENT_VIEW);
                         break;
@@ -381,7 +394,8 @@ public class AdminView extends JFrame {
                             if (label.getText().length() == 1 || label.getText().contains("📊") ||
                                 label.getText().contains("👥") || label.getText().contains("🏭") ||
                                 label.getText().contains("📁") || label.getText().contains("📦") ||
-                                label.getText().contains("👨‍💼") || label.getText().contains("⚙️")) {
+                                label.getText().contains("📋") || label.getText().contains("👨‍💼") ||
+                                label.getText().contains("⚙️")) {
                                 // This is an icon
                                 label.setForeground(new Color(80, 80, 80));
                             } else if (!label.getText().equals(">")) {

@@ -180,7 +180,7 @@ public class StaffView extends JFrame {
         footerPanel.setBackground(new Color(255, 140, 0));
         footerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JLabel footerLabel = new JLabel("© 2024 - Hệ thống bán hàng - Phiên bản 1.0");
+        JLabel footerLabel = new JLabel("Hệ thống bán hàng - Phiên bản 1.0");
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         footerLabel.setForeground(Color.WHITE);
 
