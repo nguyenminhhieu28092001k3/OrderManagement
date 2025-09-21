@@ -12,6 +12,7 @@ import app.swing.service.CategoryService;
 import app.swing.service.ProductService;
 import app.swing.service.CustomerService;
 import app.swing.service.InventoryMovementService;
+import app.swing.service.OrderService;
 import app.swing.util.SessionManager;
 import app.swing.view.LoginView;
 import app.swing.view.pages.UserManagementView;
@@ -521,101 +522,257 @@ public class AdminView extends JFrame {
         contentPanel.setBackground(new Color(245, 245, 245));
         contentPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-        // Dashboard content
-        JPanel dashboardPanel = new JPanel();
-        dashboardPanel.setBackground(new Color(245, 245, 245));
-        dashboardPanel.setLayout(new BorderLayout());
+        // Create scrollable content
+        JPanel scrollableContent = new JPanel();
+        scrollableContent.setLayout(new BoxLayout(scrollableContent, BoxLayout.Y_AXIS));
+        scrollableContent.setBackground(new Color(245, 245, 245));
 
-        // Header with welcome message and date
-        JPanel dashboardHeader = new JPanel(new BorderLayout());
-        dashboardHeader.setBackground(new Color(245, 245, 245));
-        dashboardHeader.setBorder(new EmptyBorder(20, 30, 10, 30));
+        // Combined header and stats panel
+        JPanel combinedPanel = createCombinedHeaderStatsPanel();
+        scrollableContent.add(combinedPanel);
 
-        JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        welcomePanel.setBackground(new Color(245, 245, 245));
+        // Add scroll pane
+        JScrollPane scrollPane = new JScrollPane(scrollableContent);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        JLabel welcomeLabel = new JLabel("Chào mừng, " + currentUser.getFullName() + "!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        welcomeLabel.setForeground(new Color(50, 50, 50));
-
-        welcomePanel.add(welcomeLabel);
-        dashboardHeader.add(welcomePanel, BorderLayout.WEST);
-
-        // Stats overview
-        JPanel statsPanel = new JPanel(new GridLayout(1, 3, 20, 0));
-        statsPanel.setBackground(new Color(245, 245, 245));
-        statsPanel.setBorder(new EmptyBorder(15, 30, 15, 30));
-
-        statsPanel.add(createStatsCard("Người dùng", "6", new Color(70, 130, 180)));
-        statsPanel.add(createStatsCard("Đơn hàng", "24", new Color(60, 179, 113)));
-        statsPanel.add(createStatsCard("Sản phẩm", "150", new Color(255, 165, 0)));
-
-        // Recent activities
-        JPanel activitiesPanel = new JPanel(new BorderLayout());
-        activitiesPanel.setBackground(Color.WHITE);
-        activitiesPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createEmptyBorder(0, 30, 20, 30),
-            BorderFactory.createLineBorder(new Color(230, 230, 230))
-        ));
-
-        JPanel activityHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        activityHeader.setBackground(new Color(250, 250, 250));
-        activityHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
-
-        JLabel activityLabel = new JLabel("Hoạt động gần đây");
-        activityLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        activityHeader.add(activityLabel);
-
-        JPanel activityContent = new JPanel();
-        activityContent.setLayout(new BoxLayout(activityContent, BoxLayout.Y_AXIS));
-        activityContent.setBackground(Color.WHITE);
-        activityContent.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
-        activityContent.add(createActivityItem("Đăng nhập hệ thống", "admin", "Hôm nay, 08:15"));
-        activityContent.add(createActivityItem("Cập nhật thông tin người dùng", "admin", "Hôm qua, 16:30"));
-        activityContent.add(createActivityItem("Thêm sản phẩm mới", "staff1", "22/09/2025, 10:45"));
-        activityContent.add(createActivityItem("Tạo đơn hàng", "customer_admin1", "21/09/2025, 14:20"));
-
-        activitiesPanel.add(activityHeader, BorderLayout.NORTH);
-        activitiesPanel.add(activityContent, BorderLayout.CENTER);
-
-        // Add all to dashboard
-        dashboardPanel.add(dashboardHeader, BorderLayout.NORTH);
-        dashboardPanel.add(statsPanel, BorderLayout.CENTER);
-        dashboardPanel.add(activitiesPanel, BorderLayout.SOUTH);
-
-        // Add dashboard to content
-        contentPanel.add(dashboardPanel, BorderLayout.CENTER);
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
 
         return contentPanel;
     }
 
+    private JPanel createCombinedHeaderStatsPanel() {
+        JPanel combinedPanel = new JPanel();
+        combinedPanel.setLayout(new BoxLayout(combinedPanel, BoxLayout.Y_AXIS));
+        combinedPanel.setBackground(new Color(245, 245, 245));
+        combinedPanel.setBorder(new EmptyBorder(15, 30, 15, 30));
+
+        // Main stats section - moved to top
+        JPanel mainStatsSection = createMainStatsSection();
+        combinedPanel.add(mainStatsSection);
+
+        // Small gap
+        combinedPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+
+        // Secondary stats section
+        JPanel secondaryStatsSection = createSecondaryStatsSection();
+        combinedPanel.add(secondaryStatsSection);
+
+        // Small gap
+        combinedPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // Header section - moved to bottom
+        JPanel headerSection = createHeaderSection();
+        combinedPanel.add(headerSection);
+
+        return combinedPanel;
+    }
+
+    private JPanel createHeaderSection() {
+        JPanel dashboardHeader = new JPanel(new BorderLayout());
+        dashboardHeader.setBackground(new Color(245, 245, 245));
+
+        // Center panel for welcome message
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(new Color(245, 245, 245));
+
+        JLabel welcomeLabel = new JLabel("Chào mừng, " + currentUser.getFullName() + "!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setForeground(new Color(50, 50, 50));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel dateLabel = new JLabel(java.time.LocalDate.now().format(
+            java.time.format.DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy",
+            new java.util.Locale("vi", "VN"))));
+        dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        dateLabel.setForeground(new Color(120, 120, 120));
+        dateLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        centerPanel.add(welcomeLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        centerPanel.add(dateLabel);
+
+        dashboardHeader.add(centerPanel, BorderLayout.CENTER);
+
+        // Add refresh button
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.setBackground(new Color(245, 245, 245));
+
+        JButton refreshButton = new JButton("Làm mới");
+        refreshButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        refreshButton.setBackground(new Color(70, 130, 180));
+        refreshButton.setForeground(Color.WHITE);
+        refreshButton.setBorderPainted(false);
+        refreshButton.setFocusPainted(false);
+        refreshButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshButton.addActionListener(e -> refreshDashboard());
+
+        rightPanel.add(refreshButton);
+        dashboardHeader.add(rightPanel, BorderLayout.EAST);
+
+        return dashboardHeader;
+    }
+
+    private JPanel createMainStatsSection() {
+        JPanel statsPanel = new JPanel(new GridLayout(1, 4, 20, 0));
+        statsPanel.setBackground(new Color(245, 245, 245));
+        statsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+
+        // Get real statistics from database
+        int userCount = getUserCount();
+        int orderCount = getOrderCount();
+        int productCount = getProductCount();
+        int customerCount = getCustomerCount();
+
+        statsPanel.add(createStatsCard("Tổng Người Dùng", String.valueOf(userCount), new Color(70, 130, 180)));
+        statsPanel.add(createStatsCard("Tổng Đơn Hàng", String.valueOf(orderCount), new Color(60, 179, 113)));
+        statsPanel.add(createStatsCard("Tổng Sản Phẩm", String.valueOf(productCount), new Color(255, 165, 0)));
+        statsPanel.add(createStatsCard("Tổng Khách Hàng", String.valueOf(customerCount), new Color(220, 20, 60)));
+
+        return statsPanel;
+    }
+
+    private JPanel createSecondaryStatsSection() {
+        JPanel statsPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+        statsPanel.setBackground(new Color(245, 245, 245));
+        statsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+
+        // Get additional statistics
+        int pendingOrders = getPendingOrderCount();
+        int activeSuppliers = getActiveSupplierCount();
+        int lowStockProducts = getLowStockProductCount();
+
+        statsPanel.add(createStatsCard("Đơn Chờ Xử Lý", String.valueOf(pendingOrders), new Color(255, 193, 7)));
+        statsPanel.add(createStatsCard("Nhà Cung Cấp", String.valueOf(activeSuppliers), new Color(108, 117, 125)));
+        statsPanel.add(createStatsCard("Sản Phẩm Sắp Hết", String.valueOf(lowStockProducts), new Color(220, 53, 69)));
+
+        return statsPanel;
+    }
+
+
+
+    private void showView(String viewName) {
+        contentCardLayout.show(contentArea, viewName);
+    }
+
+    private void refreshDashboard() {
+        // Show loading indicator
+        SwingUtilities.invokeLater(() -> {
+            // Remove current dashboard and add new one
+            contentArea.remove(contentArea.getComponent(0)); // Remove old dashboard
+            contentArea.add(createDashboardPanel(), DASHBOARD_VIEW, 0); // Add new dashboard at index 0
+            contentCardLayout.show(contentArea, DASHBOARD_VIEW);
+            contentArea.revalidate();
+            contentArea.repaint();
+
+            // Show success message briefly
+            JOptionPane.showMessageDialog(this,
+                "Dashboard đã được cập nhật!",
+                "Thông báo",
+                JOptionPane.INFORMATION_MESSAGE);
+        });
+    }
+
+    // Statistics helper methods
+    private int getUserCount() {
+        try {
+            return userService.getAllUsers().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getOrderCount() {
+        try {
+            return new OrderService().getAllOrders().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getProductCount() {
+        try {
+            return productService.getAllProducts().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getCustomerCount() {
+        try {
+            return customerService.getAllCustomers().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getPendingOrderCount() {
+        try {
+            return (int) new OrderService().getAllOrders().stream()
+                .filter(order -> "pending".equals(order.getStatus()))
+                .count();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getActiveSupplierCount() {
+        try {
+            return supplierService.getAllSuppliers().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private int getLowStockProductCount() {
+        try {
+            return (int) productService.getAllProducts().stream()
+                .filter(Product::isLowStock)
+                .count();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     private JPanel createStatsCard(String title, String value, Color color) {
+        return createStatsCard(title, value, color, null);
+    }
+
+    private JPanel createStatsCard(String title, String value, Color color, String icon) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(230, 230, 230)),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
+        card.setPreferredSize(new Dimension(200, 100));
 
+        // Center panel for better balance
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(Color.WHITE);
+
+        // Title at top
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        titleLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         titleLabel.setForeground(new Color(100, 100, 100));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(titleLabel);
 
+        // Small gap
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+
+        // Value at bottom
         JLabel valueLabel = new JLabel(value);
-        valueLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        valueLabel.setFont(new Font("Arial", Font.BOLD, 28));
         valueLabel.setForeground(color);
+        valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(valueLabel);
 
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        titlePanel.setBackground(Color.WHITE);
-        titlePanel.add(titleLabel);
-
-        JPanel valuePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        valuePanel.setBackground(Color.WHITE);
-        valuePanel.add(valueLabel);
-
-        card.add(titlePanel, BorderLayout.WEST);
-        card.add(valuePanel, BorderLayout.EAST);
+        card.add(centerPanel, BorderLayout.CENTER);
 
         return card;
     }
