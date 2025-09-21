@@ -179,7 +179,7 @@ public class AdminView extends JFrame {
         sidebarPanel.add(createNavItem("Sản phẩm", "📦", true));
         sidebarPanel.add(createNavItem("Xuất nhập kho", "📋", true));
         sidebarPanel.add(createNavItem("Khách hàng", "👨‍💼", true));
-        sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true));
+        //sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true));
 
         // Add flexible space
         sidebarPanel.add(Box.createVerticalGlue());
