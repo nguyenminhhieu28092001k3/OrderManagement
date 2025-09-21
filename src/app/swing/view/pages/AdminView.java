@@ -20,6 +20,7 @@ import app.swing.view.pages.CategoryManagementView;
 import app.swing.view.pages.CustomerManagementView;
 import app.swing.view.pages.ProductManagementView;
 import app.swing.view.pages.InventoryMovementManagementView;
+import app.swing.view.pages.OrderManagementView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -56,6 +57,7 @@ public class AdminView extends JFrame {
     private final String PRODUCT_MANAGEMENT_VIEW = "product_management";
     private final String CUSTOMER_MANAGEMENT_VIEW = "customer_management";
     private final String INVENTORY_MANAGEMENT_VIEW = "inventory_management";
+    private final String ORDER_MANAGEMENT_VIEW = "order_management";
 
     // Service instances
     private UserService userService;
@@ -142,6 +144,9 @@ public class AdminView extends JFrame {
         InventoryMovementManagementView inventoryMgmtView = new InventoryMovementManagementView(true);
         contentArea.add(inventoryMgmtView.getMainPanel(), INVENTORY_MANAGEMENT_VIEW);
 
+        OrderManagementView orderMgmtView = new OrderManagementView(true);
+        contentArea.add(orderMgmtView.getMainPanel(), ORDER_MANAGEMENT_VIEW);
+
         // Show dashboard by default
         contentCardLayout.show(contentArea, DASHBOARD_VIEW);
 
@@ -179,6 +184,7 @@ public class AdminView extends JFrame {
         sidebarPanel.add(createNavItem("Sản phẩm", "📦", true));
         sidebarPanel.add(createNavItem("Xuất nhập kho", "📋", true));
         sidebarPanel.add(createNavItem("Khách hàng", "👨‍💼", true));
+        sidebarPanel.add(createNavItem("Đơn hàng", "🛒", true));
         //sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true));
 
         // Add flexible space
@@ -338,6 +344,9 @@ public class AdminView extends JFrame {
                     case "Khách hàng":
                         contentCardLayout.show(contentArea, CUSTOMER_MANAGEMENT_VIEW);
                         break;
+                    case "Đơn hàng":
+                        contentCardLayout.show(contentArea, ORDER_MANAGEMENT_VIEW);
+                        break;
                     default:
                         JOptionPane.showMessageDialog(AdminView.this,
                             "Chức năng \"" + title + "\" đang được phát triển!",
@@ -395,7 +404,7 @@ public class AdminView extends JFrame {
                                 label.getText().contains("👥") || label.getText().contains("🏭") ||
                                 label.getText().contains("📁") || label.getText().contains("📦") ||
                                 label.getText().contains("📋") || label.getText().contains("👨‍💼") ||
-                                label.getText().contains("⚙️")) {
+                                label.getText().contains("🛒") || label.getText().contains("⚙️")) {
                                 // This is an icon
                                 label.setForeground(new Color(80, 80, 80));
                             } else if (!label.getText().equals(">")) {
