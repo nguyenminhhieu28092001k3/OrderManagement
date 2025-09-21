@@ -25,10 +25,30 @@ import java.awt.geom.*;
 public class AdminView extends JFrame {
 
     private User currentUser;
+    private JPanel currentSelectedPanel = null;
+    private String currentSelectedTitle = "Dashboards"; // Default selection
 
     public AdminView(User user) {
         this.currentUser = user;
         initComponents();
+    }
+
+    /**
+     * Method to update navigation selection from external views
+     * @param selectedTitle The title of the menu item to select
+     */
+    public void setSelectedNavigation(String selectedTitle) {
+        currentSelectedTitle = selectedTitle;
+        // Refresh the sidebar to update visual state
+        SwingUtilities.invokeLater(() -> {
+            // Find and update the navigation items
+            updateNavigationSelection();
+        });
+    }
+
+    private void updateNavigationSelection() {
+        // This would require rebuilding the sidebar or keeping references to all nav items
+        // For now, we'll handle selection updates in the click handlers
     }
 
     private void initComponents() {
@@ -81,14 +101,13 @@ public class AdminView extends JFrame {
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         // Menu items with icons - matching the image
-        sidebarPanel.add(createNavItem("Home", "🏠", false, false));
-        sidebarPanel.add(createNavItem("Dashboards", "📊", true, false));
-        sidebarPanel.add(createNavItem("Người dùng", "👥", true, true)); // This one is highlighted like "Segments" in the image
-        sidebarPanel.add(createNavItem("Nhà cung cấp", "🏭", true, false));
-        sidebarPanel.add(createNavItem("Danh mục", "📁", true, false));
-        sidebarPanel.add(createNavItem("Sản phẩm", "📦", true, false));
-        sidebarPanel.add(createNavItem("Khách hàng", "👨‍💼", true, false));
-        sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true, false));
+        sidebarPanel.add(createNavItem("Dashboards", "📊", true));
+        sidebarPanel.add(createNavItem("Người dùng", "👥", true));
+        sidebarPanel.add(createNavItem("Nhà cung cấp", "🏭", true));
+        sidebarPanel.add(createNavItem("Danh mục", "📁", true));
+        sidebarPanel.add(createNavItem("Sản phẩm", "📦", true));
+        sidebarPanel.add(createNavItem("Khách hàng", "👨‍💼", true));
+        sidebarPanel.add(createNavItem("Cài đặt", "⚙️", true));
 
         // Add flexible space
         sidebarPanel.add(Box.createVerticalGlue());
@@ -127,10 +146,13 @@ public class AdminView extends JFrame {
         return sidebarPanel;
     }
 
-    private JPanel createNavItem(String title, String icon, boolean hasSubmenu, boolean isSelected) {
+    private JPanel createNavItem(String title, String icon, boolean hasSubmenu) {
         // Create main panel
         JPanel navItem = new JPanel(new BorderLayout());
         navItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+
+        // Check if this item is currently selected
+        boolean isSelected = title.equals(currentSelectedTitle);
 
         // Set background based on selection
         Color bgColor = isSelected ? new Color(240, 245, 255) : Color.WHITE;
@@ -183,11 +205,19 @@ public class AdminView extends JFrame {
         navItem.add(contentPanel, BorderLayout.CENTER);
 
         // Add left blue indicator bar if selected
+        JPanel indicator = new JPanel();
+        indicator.setPreferredSize(new Dimension(3, 0));
         if (isSelected) {
-            JPanel indicator = new JPanel();
-            indicator.setPreferredSize(new Dimension(3, 0));
             indicator.setBackground(new Color(65, 105, 225)); // Royal blue
             navItem.add(indicator, BorderLayout.WEST);
+        } else {
+            indicator.setBackground(Color.WHITE);
+            navItem.add(indicator, BorderLayout.WEST);
+        }
+
+        // Store reference for selection tracking
+        if (isSelected) {
+            currentSelectedPanel = navItem;
         }
 
         // Add hover effect
@@ -210,7 +240,14 @@ public class AdminView extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                // Update selection
+                setSelectedNavItem(title, navItem, contentPanel, iconLabel, textLabel, indicator);
+
+                // Handle navigation
                 switch (title) {
+                    case "Dashboards":
+                        // Already on dashboard, no action needed
+                        break;
                     case "Người dùng":
                         new UserManagementView().setVisible(true);
                         break;
@@ -237,6 +274,65 @@ public class AdminView extends JFrame {
         });
 
         return navItem;
+    }
+
+    private void setSelectedNavItem(String title, JPanel navItem, JPanel contentPanel,
+                                   JLabel iconLabel, JLabel textLabel, JPanel indicator) {
+        // Reset previous selection if exists
+        if (currentSelectedPanel != null && !currentSelectedTitle.equals(title)) {
+            resetNavItemStyle(currentSelectedPanel);
+        }
+
+        // Set new selection
+        currentSelectedTitle = title;
+        currentSelectedPanel = navItem;
+
+        // Apply selected styles
+        Color selectedBgColor = new Color(240, 245, 255);
+        Color selectedTextColor = new Color(65, 105, 225);
+
+        navItem.setBackground(selectedBgColor);
+        contentPanel.setBackground(selectedBgColor);
+        iconLabel.setForeground(selectedTextColor);
+        textLabel.setForeground(selectedTextColor);
+        indicator.setBackground(selectedTextColor);
+
+        // Repaint to ensure visual update
+        navItem.repaint();
+    }
+
+    private void resetNavItemStyle(JPanel navItem) {
+        // Reset to default styles
+        Component[] components = navItem.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JPanel) {
+                JPanel panel = (JPanel) comp;
+                if (panel.getPreferredSize().width == 3) { // This is the indicator
+                    panel.setBackground(Color.WHITE);
+                } else { // This is the content panel
+                    panel.setBackground(Color.WHITE);
+                    // Reset content panel children
+                    Component[] contentComponents = panel.getComponents();
+                    for (Component contentComp : contentComponents) {
+                        if (contentComp instanceof JLabel) {
+                            JLabel label = (JLabel) contentComp;
+                            if (label.getText().length() == 1 || label.getText().contains("📊") ||
+                                label.getText().contains("👥") || label.getText().contains("🏭") ||
+                                label.getText().contains("📁") || label.getText().contains("📦") ||
+                                label.getText().contains("👨‍💼") || label.getText().contains("⚙️")) {
+                                // This is an icon
+                                label.setForeground(new Color(80, 80, 80));
+                            } else if (!label.getText().equals(">")) {
+                                // This is text
+                                label.setForeground(new Color(60, 60, 60));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        navItem.setBackground(Color.WHITE);
+        navItem.repaint();
     }
 
     private JPanel createAvatarPanel() {
