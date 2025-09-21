@@ -45,6 +45,13 @@ public class OrderService {
 
             while (rs.next()) {
                 Order order = mapResultSetToOrder(rs);
+
+                // Load customer information if customer_id is not null
+                if (order.getCustomerId() != null) {
+                    Customer customer = customerService.getCustomerById(order.getCustomerId());
+                    order.setCustomer(customer);
+                }
+
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -407,6 +414,13 @@ public class OrderService {
 
             while (rs.next()) {
                 Order order = mapResultSetToOrder(rs);
+
+                // Load customer information if customer_id is not null
+                if (order.getCustomerId() != null) {
+                    Customer customer = customerService.getCustomerById(order.getCustomerId());
+                    order.setCustomer(customer);
+                }
+
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -437,6 +451,13 @@ public class OrderService {
 
             while (rs.next()) {
                 Order order = mapResultSetToOrder(rs);
+
+                // Load customer information if customer_id is not null
+                if (order.getCustomerId() != null) {
+                    Customer customer = customerService.getCustomerById(order.getCustomerId());
+                    order.setCustomer(customer);
+                }
+
                 orders.add(order);
             }
         } catch (SQLException e) {

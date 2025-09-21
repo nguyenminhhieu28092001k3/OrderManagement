@@ -535,7 +535,19 @@ public class OrderManagementView extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        List<Customer> customers = customerService.getAllCustomers();
+        List<Customer> customers = null;
+        try {
+            customers = customerService.getAllCustomers();
+            System.out.println("Loaded " + customers.size() + " customers");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Lỗi khi tải danh sách khách hàng: " + e.getMessage(),
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE);
+            customers = new ArrayList<>();
+        }
+
         DefaultComboBoxModel<Customer> customerModel = new DefaultComboBoxModel<>();
         customerModel.addElement(null); // Allow no customer selection
         for (Customer customer : customers) {

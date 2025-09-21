@@ -20,17 +20,31 @@ public class CustomerService {
         List<Customer> customers = new ArrayList<>();
 
         try (Connection conn = DbConnection.getConnection()) {
+            if (conn == null) {
+                System.err.println("Database connection is null!");
+                return customers;
+            }
+
             String sql = "SELECT id, code, name, email, phone, address, note, is_active, " +
                          "created_at, updated_at FROM customers ORDER BY name";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
+            int count = 0;
             while (rs.next()) {
                 Customer customer = mapResultSetToCustomer(rs);
                 customers.add(customer);
+                count++;
             }
+
+            System.out.println("CustomerService: Successfully loaded " + count + " customers from database");
+
         } catch (SQLException e) {
+            System.err.println("SQL Error in getAllCustomers: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error in getAllCustomers: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -45,6 +59,11 @@ public class CustomerService {
         List<Customer> customers = new ArrayList<>();
 
         try (Connection conn = DbConnection.getConnection()) {
+            if (conn == null) {
+                System.err.println("Database connection is null!");
+                return customers;
+            }
+
             String sql = "SELECT id, code, name, email, phone, address, note, is_active, " +
                          "created_at, updated_at FROM customers WHERE is_active = true " +
                          "ORDER BY name";
@@ -52,11 +71,20 @@ public class CustomerService {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
+            int count = 0;
             while (rs.next()) {
                 Customer customer = mapResultSetToCustomer(rs);
                 customers.add(customer);
+                count++;
             }
+
+            System.out.println("CustomerService: Successfully loaded " + count + " active customers from database");
+
         } catch (SQLException e) {
+            System.err.println("SQL Error in getActiveCustomers: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error in getActiveCustomers: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -308,8 +336,17 @@ public class CustomerService {
         customer.setAddress(rs.getString("address"));
         customer.setNote(rs.getString("note"));
         customer.setActive(rs.getBoolean("is_active"));
-        customer.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        customer.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+
+        // Handle potential null timestamps
+        Timestamp createdTimestamp = rs.getTimestamp("created_at");
+        if (createdTimestamp != null) {
+            customer.setCreatedAt(createdTimestamp.toLocalDateTime());
+        }
+
+        Timestamp updatedTimestamp = rs.getTimestamp("updated_at");
+        if (updatedTimestamp != null) {
+            customer.setUpdatedAt(updatedTimestamp.toLocalDateTime());
+        }
 
         return customer;
     }
