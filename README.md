@@ -6,41 +6,11 @@
 - **Database**: PostgreSQL 15+ (được cài tự động bằng Docker)
 - **IDE**: NetBeans (khuyến nghị) hoặc IntelliJ IDEA
 
-### 2. Cài đặt Database
-
-####  Sử dụng Docker🐳
-```bash
-# Khởi động PostgreSQL với Docker
-# Windows
-database/start-db.bat
-
-# Linux/Mac
-chmod +x database/start-db.sh
-./database/start-db.sh
-
-# Hoặc manual
-docker-compose up -d postgres
-```
-
-### 3. Kiểm tra kết nối Database
-```bash
-# Test database connection
-# Windows
-test-db.bat
-
-# Linux/Mac
-chmod +x test-db.sh
-./test-db.sh
-```
-
-### 4. Biên dịch và chạy ứng dụng
+### 2. Biên dịch và chạy ứng dụng
 ```bash
 # Windows
-run.bat
+.\run.bat
 
-# Linux/Mac
-chmod +x run.sh
-./run.sh
 ```
 
 ## 🚀 Sử dụng
