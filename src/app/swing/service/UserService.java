@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -122,5 +124,218 @@ public class UserService {
             default:
                 return "Lỗi không xác định.";
         }
+    }
+
+    // CRUD operations for user management
+
+    /**
+     * Get all users from database
+     * @return List of all users
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "SELECT id, username, password, role, status, full_name, email FROM users ORDER BY id";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getBoolean("status"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    /**
+     * Get user by ID
+     * @param id User ID
+     * @return User object if found, null otherwise
+     */
+    public User getUserById(int id) {
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "SELECT id, username, password, role, status, full_name, email FROM users WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getBoolean("status"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Create new user
+     * @param user User object with data
+     * @return true if successful, false otherwise
+     */
+    public boolean createUser(User user) {
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "INSERT INTO users (username, password, role, status, full_name, email) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, user.getUsername());
+
+            // Hash the password if it's not already hashed
+            String password = user.getPassword();
+            if (password.length() != 32) {
+                password = hashMD5(password);
+            }
+            stmt.setString(2, password);
+
+            stmt.setString(3, user.getRole());
+            stmt.setBoolean(4, user.isStatus());
+            stmt.setString(5, user.getFullName());
+            stmt.setString(6, user.getEmail());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Update existing user
+     * @param user User object with updated data
+     * @return true if successful, false otherwise
+     */
+    public boolean updateUser(User user) {
+        try (Connection conn = DbConnection.getConnection()) {
+            StringBuilder sql = new StringBuilder("UPDATE users SET username = ?, role = ?, status = ?, full_name = ?, email = ?");
+
+            // If password is provided, update it too
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                sql.append(", password = ?");
+            }
+
+            sql.append(" WHERE id = ?");
+
+            PreparedStatement stmt = conn.prepareStatement(sql.toString());
+
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getRole());
+            stmt.setBoolean(3, user.isStatus());
+            stmt.setString(4, user.getFullName());
+            stmt.setString(5, user.getEmail());
+
+            int paramIndex = 6;
+
+            // If password is provided, set it
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                String password = user.getPassword();
+                if (password.length() != 32) {
+                    password = hashMD5(password);
+                }
+                stmt.setString(paramIndex++, password);
+            }
+
+            stmt.setInt(paramIndex, user.getId());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Delete user by ID
+     * @param id User ID
+     * @return true if successful, false otherwise
+     */
+    public boolean deleteUser(int id) {
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "DELETE FROM users WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Check if username already exists (for creating new users)
+     * @param username Username to check
+     * @return true if username exists, false otherwise
+     */
+    public boolean usernameExists(String username) {
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if username already exists for another user (for updating users)
+     * @param username Username to check
+     * @param excludeUserId User ID to exclude from check
+     * @return true if username exists for another user, false otherwise
+     */
+    public boolean usernameExistsForOtherUser(String username, int excludeUserId) {
+        try (Connection conn = DbConnection.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM users WHERE username = ? AND id != ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setInt(2, excludeUserId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

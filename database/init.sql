@@ -75,6 +75,11 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
 
+
+
+
+
+
 -- Orders (thêm user_id tham chiếu users.id)
 CREATE TABLE IF NOT EXISTS orders (
   id BIGSERIAL PRIMARY KEY,
