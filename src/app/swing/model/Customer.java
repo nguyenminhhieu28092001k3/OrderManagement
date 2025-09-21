@@ -3,7 +3,7 @@ package app.swing.model;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Customer entity
+ * Lớp model cho thực thể Khách hàng
  */
 public class Customer {
     private long id;
@@ -17,7 +17,7 @@ public class Customer {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Constructors
+    // Các constructor
     public Customer() {}
 
     public Customer(long id, String code, String name, String email, String phone,
@@ -35,7 +35,7 @@ public class Customer {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
+    // Các phương thức Getter và Setter
     public long getId() {
         return id;
     }

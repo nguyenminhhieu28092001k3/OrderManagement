@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Management view for products
+ * Giao diện quản lý sản phẩm
  */
 public class ProductManagementView extends JFrame {
 

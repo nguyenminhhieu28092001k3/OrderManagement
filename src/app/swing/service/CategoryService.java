@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service class for Category entity
+ * Lớp service cho thực thể Danh mục
  */
 public class CategoryService {
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for InventoryMovement entity
+ * Lớp service cho thực thể Xuất nhập kho
  */
 public class InventoryMovementService {
 
@@ -23,8 +23,8 @@ public class InventoryMovementService {
     }
 
     /**
-     * Get all inventory movements from database
-     * @return List of all inventory movements
+     * Lấy tất cả phiếu xuất nhập kho từ cơ sở dữ liệu
+     * @return Danh sách tất cả phiếu xuất nhập kho
      */
     public List<InventoryMovement> getAllMovements() {
         List<InventoryMovement> movements = new ArrayList<>();

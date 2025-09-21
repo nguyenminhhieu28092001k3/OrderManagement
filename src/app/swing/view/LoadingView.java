@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Giao diện loading hiển thị khi khởi động ứng dụng
  * @author HieuNM
  */
 public class LoadingView extends JWindow {

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Management view for categories
+ * Giao diện quản lý danh mục
  */
 public class CategoryManagementView extends JFrame {
 

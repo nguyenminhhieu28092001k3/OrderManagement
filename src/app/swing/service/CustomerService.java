@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Customer entity
+ * Lớp service cho thực thể Khách hàng
  */
 public class CustomerService {
 
     /**
-     * Get all customers from database
-     * @return List of all customers
+     * Lấy tất cả khách hàng từ cơ sở dữ liệu
+     * @return Danh sách tất cả khách hàng
      */
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();

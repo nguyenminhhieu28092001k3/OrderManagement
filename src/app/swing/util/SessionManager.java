@@ -3,7 +3,7 @@ package app.swing.util;
 import app.swing.model.User;
 
 /**
- *
+ * Quản lý phiên đăng nhập của người dùng
  * @author HieuNM
  */
 public class SessionManager {

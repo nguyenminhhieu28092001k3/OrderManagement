@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for OrderItem entity
+ * Lớp service cho thực thể Chi tiết đơn hàng
  */
 public class OrderItemService {
 

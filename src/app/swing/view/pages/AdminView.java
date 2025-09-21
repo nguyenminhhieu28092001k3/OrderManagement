@@ -60,7 +60,7 @@ public class AdminView extends JFrame {
     private final String INVENTORY_MANAGEMENT_VIEW = "inventory_management";
     private final String ORDER_MANAGEMENT_VIEW = "order_management";
 
-    // Service instances
+    // Các instance service
     private UserService userService;
     private SupplierService supplierService;
     private CategoryService categoryService;
@@ -70,7 +70,7 @@ public class AdminView extends JFrame {
 
     public AdminView(User user) {
         this.currentUser = user;
-        // Initialize services
+        // Khởi tạo các services
         this.userService = new UserService();
         this.supplierService = new SupplierService();
         this.categoryService = new CategoryService();
@@ -81,21 +81,21 @@ public class AdminView extends JFrame {
     }
 
     /**
-     * Method to update navigation selection from external views
-     * @param selectedTitle The title of the menu item to select
+     * Phương thức cập nhật lựa chọn navigation từ các view bên ngoài
+     * @param selectedTitle Tiêu đề của menu item cần chọn
      */
     public void setSelectedNavigation(String selectedTitle) {
         currentSelectedTitle = selectedTitle;
-        // Refresh the sidebar to update visual state
+        // Làm mới sidebar để cập nhật trạng thái hiển thị
         SwingUtilities.invokeLater(() -> {
-            // Find and update the navigation items
+            // Tìm và cập nhật các mục navigation
             updateNavigationSelection();
         });
     }
 
     private void updateNavigationSelection() {
-        // This would require rebuilding the sidebar or keeping references to all nav items
-        // For now, we'll handle selection updates in the click handlers
+        // Điều này yêu cầu xây dựng lại sidebar hoặc giữ tham chiếu đến tất cả nav items
+        // Hiện tại, chúng ta sẽ xử lý cập nhật lựa chọn trong các click handlers
     }
 
     private void initComponents() {
@@ -105,28 +105,28 @@ public class AdminView extends JFrame {
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Main panel with sidebar layout
+        // Panel chính với layout sidebar
         JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
         mainPanel.setBackground(new Color(245, 245, 245));
 
-        // Header panel
+        // Panel tiêu đề
         JPanel headerPanel = createHeaderPanel();
 
-        // Sidebar and content container
+        // Container chứa sidebar và nội dung
         JPanel centerPanel = new JPanel(new BorderLayout());
 
-        // Sidebar navigation
+        // Navigation sidebar
         JPanel sidebarPanel = createSidebarPanel();
 
-        // Create content area with CardLayout for different views
+        // Tạo vùng nội dung với CardLayout cho các view khác nhau
         contentArea = new JPanel();
         contentCardLayout = new CardLayout();
         contentArea.setLayout(contentCardLayout);
 
-        // Add different view panels to content area
+        // Thêm các panel view khác nhau vào vùng nội dung
         contentArea.add(createDashboardPanel(), DASHBOARD_VIEW);
 
-        // Create embedded management panels
+        // Tạo các panel quản lý nhúng
         UserManagementView userMgmtView = new UserManagementView(true);
         contentArea.add(userMgmtView.getMainPanel(), USER_MANAGEMENT_VIEW);
 
@@ -148,17 +148,17 @@ public class AdminView extends JFrame {
         OrderManagementView orderMgmtView = new OrderManagementView(true);
         contentArea.add(orderMgmtView.getMainPanel(), ORDER_MANAGEMENT_VIEW);
 
-        // Show dashboard by default
+        // Hiển thị dashboard mặc định
         contentCardLayout.show(contentArea, DASHBOARD_VIEW);
 
-        // Add sidebar and content to center panel
+        // Thêm sidebar và nội dung vào center panel
         centerPanel.add(sidebarPanel, BorderLayout.WEST);
         centerPanel.add(contentArea, BorderLayout.CENTER);
 
-        // Footer panel
+        // Panel footer
         JPanel footerPanel = createFooterPanel();
 
-        // Add all panels to main panel
+        // Thêm tất cả panels vào main panel
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);

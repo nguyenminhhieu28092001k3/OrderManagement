@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Lớp service cho thực thể Người dùng
  * @author HieuNM
  */
 public class UserService {
@@ -126,11 +126,11 @@ public class UserService {
         }
     }
 
-    // CRUD operations for user management
+    // Các thao tác CRUD cho quản lý người dùng
 
     /**
-     * Get all users from database
-     * @return List of all users
+     * Lấy tất cả người dùng từ cơ sở dữ liệu
+     * @return Danh sách tất cả người dùng
      */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();

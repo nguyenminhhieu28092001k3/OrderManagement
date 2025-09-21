@@ -7,45 +7,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class to load environment variables from .env file
- * 
+ * Lớp tiện ích để tải các biến môi trường từ file .env
+ *
  * @author
  */
 public class EnvLoader {
     private static final Map<String, String> envVars = new HashMap<>();
     private static boolean loaded = false;
-    
+
     static {
         loadEnvFile();
     }
-    
+
     /**
-     * Load environment variables from .env file
+     * Tải các biến môi trường từ file .env
      */
     private static void loadEnvFile() {
         if (loaded) return;
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(".env"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                
-                // Skip empty lines and comments
+
+                // Bỏ qua các dòng trống và comments
                 if (line.isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                
-                // Parse key=value pairs
+
+                // Phân tích các cặp key=value
                 int equalIndex = line.indexOf('=');
                 if (equalIndex > 0) {
                     String key = line.substring(0, equalIndex).trim();
                     String value = line.substring(equalIndex + 1).trim();
-                    
-                    // Remove quotes if present
+
+                    // Loại bỏ dấu ngoặc kép nếu có
                     if (value.startsWith("\"") && value.endsWith("\"")) {
                         value = value.substring(1, value.length() - 1);
                     }
-                    
+
                     envVars.put(key, value);
                 }
             }
@@ -55,39 +55,39 @@ public class EnvLoader {
             System.out.println("⚠️ .env file not found, using system environment variables");
         }
     }
-    
+
     /**
-     * Get environment variable value
-     * Priority: .env file -> system environment -> default value
-     * 
-     * @param key Environment variable key
-     * @param defaultValue Default value if not found
-     * @return Environment variable value or default value
+     * Lấy giá trị biến môi trường
+     * Ưu tiên: file .env -> biến môi trường hệ thống -> giá trị mặc định
+     *
+     * @param key Khóa biến môi trường
+     * @param defaultValue Giá trị mặc định nếu không tìm thấy
+     * @return Giá trị biến môi trường hoặc giá trị mặc định
      */
     public static String getEnv(String key, String defaultValue) {
-        // First check .env file
+        // Kiểm tra file .env trước
         String value = envVars.get(key);
         if (value != null) {
             return value;
         }
-        
-        // Then check system environment
+
+        // Sau đó kiểm tra biến môi trường hệ thống
         value = System.getenv(key);
         if (value != null) {
             return value;
         }
-        
-        // Return default value
+
+        // Trả về giá trị mặc định
         return defaultValue;
     }
-    
+
     /**
-     * Get environment variable value without default
-     * 
-     * @param key Environment variable key
-     * @return Environment variable value or null
+     * Lấy giá trị biến môi trường không có giá trị mặc định
+     *
+     * @param key Khóa biến môi trường
+     * @return Giá trị biến môi trường hoặc null
      */
     public static String getEnv(String key) {
         return getEnv(key, null);
     }
-} 
+}

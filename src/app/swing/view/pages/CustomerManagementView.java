@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Management view for customers
+ * Giao diện quản lý khách hàng
  */
 public class CustomerManagementView extends JFrame {
 

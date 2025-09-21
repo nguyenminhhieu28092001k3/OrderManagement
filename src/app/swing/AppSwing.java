@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
- *
+ * Lớp chính khởi động ứng dụng Swing
  * @author HieuNM
  */
 public class AppSwing {

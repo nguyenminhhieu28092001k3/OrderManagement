@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Payment entity
+ * Lớp service cho thực thể Thanh toán
  */
 public class PaymentService {
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Model class for Order entity
+ * Lớp model cho thực thể Đơn hàng
  */
 public class Order {
     private long id;
@@ -25,14 +25,14 @@ public class Order {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Reference to related entities
+    // Tham chiếu đến các thực thể liên quan
     private Customer customer;
     private User user;
     private List<OrderItem> orderItems;
     private List<Payment> payments;
     private List<Shipment> shipments;
 
-    // Constructors
+    // Các constructor
     public Order() {
         this.orderItems = new ArrayList<>();
         this.payments = new ArrayList<>();
@@ -70,7 +70,7 @@ public class Order {
         this.shipments = new ArrayList<>();
     }
 
-    // Getters and Setters
+    // Các phương thức Getter và Setter
     public long getId() {
         return id;
     }

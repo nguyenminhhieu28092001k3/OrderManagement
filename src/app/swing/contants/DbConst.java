@@ -3,7 +3,7 @@ package app.swing.contants;
 import app.swing.util.EnvLoader;
 
 /**
- *
+ * Lớp chứa các hằng số cấu hình cơ sở dữ liệu
  * @author khaim
  */
 public class DbConst {

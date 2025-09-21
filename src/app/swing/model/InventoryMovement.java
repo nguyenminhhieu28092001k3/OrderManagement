@@ -3,7 +3,7 @@ package app.swing.model;
 import java.time.LocalDateTime;
 
 /**
- * Model class for InventoryMovement entity
+ * Lớp model cho thực thể Xuất nhập kho
  */
 public class InventoryMovement {
     private long id;

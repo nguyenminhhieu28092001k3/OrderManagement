@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Payment entity
+ * Lớp model cho thực thể Thanh toán
  */
 public class Payment {
     private long id;

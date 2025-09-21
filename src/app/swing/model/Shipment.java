@@ -3,7 +3,7 @@ package app.swing.model;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Shipment entity
+ * Lớp model cho thực thể Giao hàng
  */
 public class Shipment {
     private long id;

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Management view for orders and order items
+ * Giao diện quản lý đơn hàng và chi tiết đơn hàng
  */
 public class OrderManagementView extends JFrame {
 
@@ -42,7 +42,7 @@ public class OrderManagementView extends JFrame {
         loadOrderData();
     }
 
-    // Constructor for embedded mode
+    // Constructor cho chế độ nhúng
     public OrderManagementView(boolean embedded) {
         this.orderService = new OrderService();
         this.customerService = new CustomerService();
@@ -54,7 +54,7 @@ public class OrderManagementView extends JFrame {
         }
     }
 
-    // Method to get the main panel for embedding
+    // Phương thức lấy panel chính để nhúng
     public JPanel getMainPanel() {
         if (isEmbedded) {
             return createEmbeddedPanel();

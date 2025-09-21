@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for OrderItem entity
+ * Lớp model cho thực thể Chi tiết đơn hàng
  */
 public class OrderItem {
     private long id;

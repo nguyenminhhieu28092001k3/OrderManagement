@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Product entity
+ * Lớp service cho thực thể Sản phẩm
  */
 public class ProductService {
 
@@ -24,8 +24,8 @@ public class ProductService {
     }
 
     /**
-     * Get all products from database
-     * @return List of all products
+     * Lấy tất cả sản phẩm từ cơ sở dữ liệu
+     * @return Danh sách tất cả sản phẩm
      */
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();

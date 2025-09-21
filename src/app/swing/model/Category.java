@@ -3,7 +3,7 @@ package app.swing.model;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Category entity
+ * Lớp model cho thực thể Danh mục
  */
 public class Category {
     private long id;
@@ -13,10 +13,10 @@ public class Category {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Parent category reference (optional)
+    // Tham chiếu đến danh mục cha (tùy chọn)
     private Category parent;
 
-    // Constructors
+    // Các constructor
     public Category() {}
 
     public Category(long id, String name, Long parentId, String description,
@@ -29,7 +29,7 @@ public class Category {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
+    // Các phương thức Getter và Setter
     public long getId() {
         return id;
     }

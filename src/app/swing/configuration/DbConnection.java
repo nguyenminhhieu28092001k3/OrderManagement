@@ -6,7 +6,7 @@ package app.swing.configuration;
 import app.swing.contants.DbConst;
 import java.sql.*;
 /**
- *
+ * Lớp quản lý kết nối cơ sở dữ liệu
  * @author HieuNM
  */
 public class DbConnection {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Shipment entity
+ * Lớp service cho thực thể Giao hàng
  */
 public class ShipmentService {
 

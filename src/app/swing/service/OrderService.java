@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Order entity
+ * Lớp service cho thực thể Đơn hàng
  */
 public class OrderService {
 

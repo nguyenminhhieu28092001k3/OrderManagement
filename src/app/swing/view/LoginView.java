@@ -16,7 +16,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
+ * Giao diện đăng nhập hệ thống
  * @author hieu
  */
 public class LoginView extends JFrame {

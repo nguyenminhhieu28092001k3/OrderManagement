@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Management view for suppliers
+ * Giao diện quản lý nhà cung cấp
  */
 public class SupplierManagementView extends JFrame {
 
@@ -35,7 +35,7 @@ public class SupplierManagementView extends JFrame {
         loadSupplierData();
     }
 
-    // Constructor for embedded mode
+    // Constructor cho chế độ nhúng
     public SupplierManagementView(boolean embedded) {
         this.supplierService = new SupplierService();
         this.isEmbedded = embedded;
@@ -45,7 +45,7 @@ public class SupplierManagementView extends JFrame {
         }
     }
 
-    // Method to get the main panel for embedding
+    // Phương thức lấy panel chính để nhúng
     public JPanel getMainPanel() {
         if (isEmbedded) {
             return createEmbeddedPanel();

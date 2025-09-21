@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Management view for inventory movements
+ * Giao diện quản lý xuất nhập kho
  */
 public class InventoryMovementManagementView extends JFrame {
 

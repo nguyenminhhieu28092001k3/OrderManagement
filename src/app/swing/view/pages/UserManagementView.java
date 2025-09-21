@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- *
+ * Giao diện quản lý người dùng
  * @author hieu
  */
 public class UserManagementView extends JFrame {

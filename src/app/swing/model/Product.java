@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Product entity
+ * Lớp model cho thực thể Sản phẩm
  */
 public class Product {
     private long id;
@@ -21,11 +21,11 @@ public class Product {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Reference to category and supplier
+    // Tham chiếu đến danh mục và nhà cung cấp
     private Category category;
     private Supplier supplier;
 
-    // Constructors
+    // Các constructor
     public Product() {}
 
     public Product(long id, String sku, String name, String description, Long categoryId,
@@ -46,7 +46,7 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
+    // Các phương thức Getter và Setter
     public long getId() {
         return id;
     }

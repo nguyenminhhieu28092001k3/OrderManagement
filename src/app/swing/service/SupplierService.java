@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class for Supplier entity
+ * Lớp service cho thực thể Nhà cung cấp
  */
 public class SupplierService {
 
     /**
-     * Get all suppliers from database
-     * @return List of all suppliers
+     * Lấy tất cả nhà cung cấp từ cơ sở dữ liệu
+     * @return Danh sách tất cả nhà cung cấp
      */
     public List<Supplier> getAllSuppliers() {
         List<Supplier> suppliers = new ArrayList<>();
@@ -63,9 +63,9 @@ public class SupplierService {
     }
 
     /**
-     * Create new supplier
-     * @param supplier Supplier object with data
-     * @return true if successful, false otherwise
+     * Tạo nhà cung cấp mới
+     * @param supplier Đối tượng Supplier chứa dữ liệu
+     * @return true nếu thành công, false nếu thất bại
      */
     public boolean createSupplier(Supplier supplier) {
         try (Connection conn = DbConnection.getConnection()) {
@@ -99,9 +99,9 @@ public class SupplierService {
     }
 
     /**
-     * Update existing supplier
-     * @param supplier Supplier object with updated data
-     * @return true if successful, false otherwise
+     * Cập nhật nhà cung cấp hiện tại
+     * @param supplier Đối tượng Supplier với dữ liệu đã cập nhật
+     * @return true nếu thành công, false nếu thất bại
      */
     public boolean updateSupplier(Supplier supplier) {
         try (Connection conn = DbConnection.getConnection()) {
@@ -127,13 +127,13 @@ public class SupplierService {
     }
 
     /**
-     * Delete supplier by ID
-     * @param id Supplier ID
-     * @return true if successful, false otherwise
+     * Xóa nhà cung cấp theo ID
+     * @param id ID nhà cung cấp
+     * @return true nếu thành công, false nếu thất bại
      */
     public boolean deleteSupplier(long id) {
         try (Connection conn = DbConnection.getConnection()) {
-            // Check if supplier is being used by products
+            // Kiểm tra xem nhà cung cấp có đang được sử dụng bởi sản phẩm không
             String checkSql = "SELECT COUNT(*) FROM products WHERE supplier_id = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setLong(1, id);
