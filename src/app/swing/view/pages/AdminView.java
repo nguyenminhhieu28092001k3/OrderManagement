@@ -7,6 +7,7 @@ import app.swing.view.pages.UserManagementView;
 import app.swing.view.pages.SupplierManagementView;
 import app.swing.view.pages.CategoryManagementView;
 import app.swing.view.pages.CustomerManagementView;
+import app.swing.view.pages.ProductManagementView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -218,6 +219,9 @@ public class AdminView extends JFrame {
                         break;
                     case "Danh mục":
                         new CategoryManagementView().setVisible(true);
+                        break;
+                    case "Sản phẩm":
+                        new ProductManagementView().setVisible(true);
                         break;
                     case "Khách hàng":
                         new CustomerManagementView().setVisible(true);
