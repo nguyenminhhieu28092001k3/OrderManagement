@@ -556,7 +556,22 @@ public class OrderManagementView extends JFrame {
         JComboBox<Customer> customerComboBox = new JComboBox<>(customerModel);
         customerComboBox.setName("customer");
         if (order != null && order.getCustomer() != null) {
-            customerComboBox.setSelectedItem(order.getCustomer());
+            // Find and select the customer by ID
+            Customer orderCustomer = order.getCustomer();
+            boolean customerFound = false;
+            for (int i = 0; i < customerModel.getSize(); i++) {
+                Customer modelCustomer = customerModel.getElementAt(i);
+                if (modelCustomer != null && modelCustomer.getId() == orderCustomer.getId()) {
+                    customerComboBox.setSelectedIndex(i);
+                    customerFound = true;
+                    break;
+                }
+            }
+
+            if (!customerFound) {
+                // Try the old method as fallback
+                customerComboBox.setSelectedItem(order.getCustomer());
+            }
         }
         panel.add(customerComboBox, gbc);
 
